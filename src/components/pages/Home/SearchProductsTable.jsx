@@ -12,7 +12,6 @@ import IconButton from "@mui/material/IconButton";
 import SearchIcon from "@mui/icons-material/Search";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
-// import "../style/searchProductsTableStyles.css";
 
 export default function SearchProductsTable({ onGenerateData }) {
   const [searchTerm, setSearchTerm] = useState("");
@@ -140,15 +139,17 @@ export default function SearchProductsTable({ onGenerateData }) {
           ))}
         </TableBody>
       </Table>
-      <Stack spacing={2} style={{ marginTop: "20px", alignItems: "center" }}>
-        <Pagination
-          count={Math.ceil(records.length / postsPerPage)}
-          page={currentPage}
-          onChange={handlePageChange}
-          variant="outlined"
-          shape="rounded"
-        />
-      </Stack>
+      {records.length > postsPerPage && (
+        <Stack spacing={2} style={{ marginTop: "20px", alignItems: "center" }}>
+          <Pagination
+            count={Math.ceil(records.length / postsPerPage)}
+            page={currentPage}
+            onChange={handlePageChange}
+            variant="outlined"
+            shape="rounded"
+          />
+        </Stack>
+      )}
     </TableContainer>
   );
 }
