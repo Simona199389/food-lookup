@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Button } from "@mui/material";
 import SelectedProductsTable from "./SelectedProductsTable";
 import SearchProductsTable from "./SearchProductsTable";
-// import { Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 export default function Home() {
   const [sharedData, setSharedData] = useState([]);
@@ -20,9 +20,11 @@ export default function Home() {
 
   return (
     <>
+      <Link to="/create">
         <div style={{ display: "flex", justifyContent: "flex-end", margin: "20px"}}>
         <Button>Create Product</Button>
         </div>
+      </Link>
       <div style={{margin: "20px"}}>
         <div style={{marginBottom: "20px"}}>
       <SelectedProductsTable rows={sharedData} update_quantity={updateQuantity}/>
