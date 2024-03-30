@@ -49,22 +49,25 @@ export default function SearchProductsTable({ onGenerateData }) {
   };
 
   const handleRowClick = (product) => {
-    const isProductSelected = selectedProducts.some(
+    const storedData = localStorage.getItem("selectedRows");
+    let existingProducts = storedData ? JSON.parse(storedData) : [];
+
+    const isProductSelected = existingProducts.some(
       (selectedProduct) => selectedProduct.foodName === product.foodName
     );
 
     if (!isProductSelected) {
       const modifiedProduct = { ...product, count: 1 };
-      setSelectedProducts([...selectedProducts, modifiedProduct]);
+      existingProducts = [...existingProducts, modifiedProduct];
     } else {
-      const updatedProducts = selectedProducts.map((selectedProduct) => {
-        if (selectedProduct.foodName === product.foodName) {
-          return { ...selectedProduct, count: selectedProduct.count + 1 };
-        }
-        return selectedProduct;
-      });
-      setSelectedProducts(updatedProducts);
+      existingProducts = existingProducts.map((selectedProduct) =>
+        selectedProduct.foodName === product.foodName
+          ? { ...selectedProduct, count: selectedProduct.count + 1 }
+          : selectedProduct
+      );
     }
+    setSelectedProducts(existingProducts);
+    localStorage.setItem("selectedRows", JSON.stringify(existingProducts));
   };
 
   useEffect(() => {
@@ -85,49 +88,44 @@ export default function SearchProductsTable({ onGenerateData }) {
         <TableHead>
           <TableRow>
             <TableCell>
-              <Paper component="form" className="search-container">
+              <Paper
+                component="form"
+                style={{ display: "flex", alignItems: "center" }}
+              >
                 <InputBase
-                  className="search-input"
-                  placeholder="Search "
+                  placeholder="Search"
                   inputProps={{ "aria-label": "search" }}
+                  style={{ flex: 1 }}
                   type="text"
                   value={searchTerm}
                   onChange={handleSearch}
                 />
-                <IconButton
-                  type="button"
-                  className="search-icon"
-                  aria-label="search"
-                >
+                <IconButton type="button" aria-label="search">
                   <SearchIcon />
                 </IconButton>
-                <Divider className="vertical-divider" orientation="vertical" />
+                <Divider orientation="vertical" flexItem />
               </Paper>
             </TableCell>
           </TableRow>
           <TableRow>
-            <TableCell className="bold-cell">Description</TableCell>
-            <TableCell align="right" className="bold-cell">
+            <TableCell style={{ fontWeight: "bold" }}>Description</TableCell>
+            <TableCell align="right" style={{ fontWeight: "bold" }}>
               Kcal
             </TableCell>
-            <TableCell align="right" className="bold-cell">
+            <TableCell align="right" style={{ fontWeight: "bold" }}>
               Protein(g)
             </TableCell>
-            <TableCell align="right" className="bold-cell">
+            <TableCell align="right" style={{ fontWeight: "bold" }}>
               Fat(g)
             </TableCell>
-            <TableCell align="right" className="bold-cell">
+            <TableCell align="right" style={{ fontWeight: "bold" }}>
               Carbs(g)
             </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {currentPosts.map((row) => (
-            <TableRow
-              key={row.foodName}
-              className="clickable-cell"
-              onClick={() => handleRowClick(row)}
-            >
+            <TableRow key={row.foodName} onClick={() => handleRowClick(row)} sx={{cursor: "pointer"}}>
               <TableCell component="th" scope="row">
                 {row.foodName}
               </TableCell>
